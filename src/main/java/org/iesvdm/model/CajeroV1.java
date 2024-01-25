@@ -25,7 +25,7 @@ public class CajeroV1 {
                 System.out.println("2- Ingresar fondos");
                 System.out.println("3- Consulta de movimientos");
                 System.out.println("4- listar cuentas de un cliente");
-                System.out.println("4- informacion de un cliente");
+                System.out.println("5- informacion de un cliente");
 
                 System.out.println("0- Salir");
                 System.out.print("Seleccione una opción: ");
