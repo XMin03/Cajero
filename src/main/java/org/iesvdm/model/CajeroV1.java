@@ -24,6 +24,8 @@ public class CajeroV1 {
                 System.out.println("1- Retirar fondos");
                 System.out.println("2- Ingresar fondos");
                 System.out.println("3- Consulta de movimientos");
+                System.out.println("4- listar cuentas de un cliente");
+
                 System.out.println("0- Salir");
                 System.out.print("Seleccione una opción: ");
                 opcion = scanner.nextInt();
@@ -48,6 +50,13 @@ public class CajeroV1 {
                         scanner.nextLine(); // Limpiar el buffer
                         numCuenta = scanner.nextLine();
                         consultarMovimientos(connection, numCuenta);
+                        break;
+
+                    case 4:
+                        System.out.print("Ingrese el DNI del cliente: ");
+                        scanner.nextLine(); // Limpiar el buffer
+                        String dniCliente = scanner.nextLine();
+                        listarCuentasCliente(connection, dniCliente);
                         break;
 
                     case 0:
@@ -157,6 +166,21 @@ public class CajeroV1 {
                     double importe = resultSet.getDouble("importe");
                     System.out.println("Fecha: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(fecha)
                             + ", Importe: " + importe);
+                }
+            }
+        }
+    }
+
+    private static void listarCuentasCliente(Connection connection, String dniCliente) throws SQLException {
+        String query = "SELECT num_cuenta FROM cuentas WHERE dni = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, dniCliente);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                System.out.println("Cuentas del cliente con DNI " + dniCliente + ":");
+                while (resultSet.next()) {
+                    String numCuenta = resultSet.getString("num_cuenta");
+                    System.out.println("Número de cuenta: " + numCuenta);
                 }
             }
         }
