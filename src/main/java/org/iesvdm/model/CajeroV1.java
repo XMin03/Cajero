@@ -25,6 +25,7 @@ public class CajeroV1 {
                 System.out.println("2- Ingresar fondos");
                 System.out.println("3- Consulta de movimientos");
                 System.out.println("4- listar cuentas de un cliente");
+                System.out.println("4- informacion de un cliente");
 
                 System.out.println("0- Salir");
                 System.out.print("Seleccione una opción: ");
@@ -57,6 +58,12 @@ public class CajeroV1 {
                         scanner.nextLine(); // Limpiar el buffer
                         String dniCliente = scanner.nextLine();
                         listarCuentasCliente(connection, dniCliente);
+                        break;
+                    case 5:
+                        System.out.print("Ingrese el DNI del cliente: ");
+                        scanner.nextLine(); // Limpiar el buffer
+                        dniCliente = scanner.nextLine();
+                        consultarInformacion(connection, dniCliente);
                         break;
 
                     case 0:
@@ -181,6 +188,29 @@ public class CajeroV1 {
                 while (resultSet.next()) {
                     String numCuenta = resultSet.getString("num_cuenta");
                     System.out.println("Número de cuenta: " + numCuenta);
+                }
+            }
+        }
+    }
+    private static void consultarInformacion(Connection connection, String dni) throws SQLException {
+        String query = "SELECT * FROM clientes natural join cuentas WHERE dni = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, dni);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                System.out.println("Cliente con dni " + dni + ":");
+                while (resultSet.next()) {
+                    String apellidos = resultSet.getString("apellidos");
+                    String nombre = resultSet.getString("nombre");
+                    String num_cuenta = resultSet.getString("num_cuenta");
+                    double saldo_apertura = resultSet.getDouble("saldo_apertura");
+                    double saldo_actual = resultSet.getDouble("saldo_actual");
+
+                    System.out.println("Apellidos: "+apellidos);
+                    System.out.println("Nombre: "+nombre);
+                    System.out.println("Num_cuenta: "+num_cuenta);
+                    System.out.println("Saldo_apertura: "+saldo_apertura);
+                    System.out.println("Saldo_actual : "+saldo_actual);
                 }
             }
         }
